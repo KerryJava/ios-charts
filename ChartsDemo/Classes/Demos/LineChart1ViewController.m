@@ -142,6 +142,10 @@
     set1.valueFont = [UIFont systemFontOfSize:9.f];
     set1.fillAlpha = 65/255.0;
     set1.fillColor = UIColor.blackColor;
+  
+    set1.indicatorIndex = 15;
+    set1.indicatorStartInterval = 6;
+    set1.indicatorEndInterval = 6;
     
     NSMutableArray *dataSets = [[NSMutableArray alloc] init];
     [dataSets addObject:set1];
@@ -158,6 +162,7 @@
         for (ChartDataSet *set in _chartView.data.dataSets)
         {
             set.drawValuesEnabled = !set.isDrawValuesEnabled;
+            
         }
         
         [_chartView setNeedsDisplay];
@@ -168,6 +173,7 @@
         for (LineChartDataSet *set in _chartView.data.dataSets)
         {
             set.drawFilledEnabled = !set.isDrawFilledEnabled;
+            
         }
         
         [_chartView setNeedsDisplay];

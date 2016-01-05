@@ -455,6 +455,137 @@ public class LineChartRenderer: LineScatterCandleRadarChartRenderer
     public override func drawExtras(context context: CGContext)
     {
         drawCircles(context: context)
+        drawOval(context: context)
+    }
+    
+    public func drawOval(context context: CGContext)
+    {
+        guard let dataProvider = dataProvider, lineData = dataProvider.lineData else { return }
+        
+        let phaseX = _animator.phaseX
+        let phaseY = _animator.phaseY
+        
+        let dataSets = lineData.dataSets
+        
+        var pt = CGPoint()
+        
+        CGContextSaveGState(context)
+        
+        for (var i = 0, count = dataSets.count; i < count; i++)
+        {
+            let dataSet = lineData.getDataSetByIndex(i) as! LineChartDataSet!
+            
+            if !dataSet.isVisible || !dataSet.isDrawCirclesEnabled || dataSet.entryCount == 0
+            {
+                continue
+            }
+            
+            let trans = dataProvider.getTransformer(dataSet.axisDependency)
+            let valueToPixelMatrix = trans.valueToPixelMatrix
+            
+            var entries = dataSet.yVals
+            
+            let entryFrom = dataSet.entryForXIndex(_minX)!
+            let entryTo = dataSet.entryForXIndex(_maxX)!
+            
+            let diff = (entryFrom == entryTo) ? 1 : 0
+            let minx = max(dataSet.entryIndex(entry: entryFrom, isEqual: true) - diff, 0)
+            let maxx = min(max(minx + 2, dataSet.entryIndex(entry: entryTo, isEqual: true) + 1), entries.count)
+            
+            var maxHeight:CGFloat = 0
+            var minHeight:CGFloat = 0
+            var startx:CGFloat = 0
+            var endx:CGFloat = 0
+            
+            var width:CGFloat = 0
+            var height:CGFloat = 0
+           
+            let startInterval = dataSet.indicatorStartInterval
+            let endInterval = dataSet.indicatorEndInterval
+            let indexOfCircle = dataSet.indicatorIndex
+            var indicatorPt = CGPoint()
+ 
+            for (var j = minx, count = Int(ceil(CGFloat(maxx - minx) * phaseX + CGFloat(minx))); j < count; j++)
+            {
+                let e = entries[j]
+                pt.x = CGFloat(e.xIndex)
+                pt.y = CGFloat(e.value) * phaseY
+                pt = CGPointApplyAffineTransform(pt, valueToPixelMatrix)
+           
+                NSLog("the count is %zd", count)
+                
+                if ((j > indexOfCircle - startInterval) && (j <= indexOfCircle + endInterval)){
+                    
+                    NSLog("index  %zd  %zd  %zd  max  %fd min  %f y %f index  %f ",j, indexOfCircle, startInterval, maxHeight, minHeight, pt.y, e.xIndex)
+                    
+                    NSLog("x %f y %f", indicatorPt.x, indicatorPt.y)
+                    if (pt.y > maxHeight) {
+                        maxHeight = pt.y
+                    }
+                    
+                    if (pt.y < minHeight){
+                        minHeight = pt.y
+                    }
+                }
+                
+                switch j {
+                case indexOfCircle - startInterval:
+                    startx = pt.x
+                    maxHeight = pt.y
+                    minHeight = pt.y
+                    NSLog("1max Height is %f min height is %f", maxHeight, minHeight)
+                    break
+                case indexOfCircle + endInterval:
+                    NSLog("2max Height is %f min height is %f", maxHeight, minHeight)
+
+                    endx = pt.x
+                    width = endx - startx
+                    height = (max(fabs(indicatorPt.y - minHeight),fabs(maxHeight-indicatorPt.y)))
+                    break
+                case indexOfCircle:
+                    indicatorPt = CGPoint(x: pt.x, y: pt.y)
+                    break
+                default:
+                    break
+                }
+               
+                if (indexOfCircle + endInterval < j) {
+                    break
+                }
+                
+                if (!viewPortHandler.isInBoundsRight(pt.x))
+                {
+                    break
+                }
+                
+                // make sure the circles don't do shitty things outside bounds
+                if (!viewPortHandler.isInBoundsLeft(pt.x) || !viewPortHandler.isInBoundsY(pt.y))
+                {
+                    continue
+                }
+            }
+           
+            NSLog("width %f height  %f minHeight  %f maxHeight  %f", width, height,minHeight, maxHeight)
+            let originRect = CGRectMake(indicatorPt.x - width/2 , indicatorPt.y-height/2 , width, height)
+            
+            let arc :UIBezierPath = UIBezierPath(ovalInRect:originRect)
+            
+            let dashes: [CGFloat] = [2, 2]
+            arc.setLineDash(dashes, count: 2, phase: 0)
+            
+            UIColor.redColor().setStroke()
+            
+            arc.stroke()
+            
+            let displayLabel = "hello world"
+            let valueFont = dataSet.valueFont
+            let valueTextColor = dataSet.valueTextColor
+            
+            let valOffset = Int(dataSet.circleRadius * 1.75 + height/2)
+            ChartUtils.drawText(context: context, text:displayLabel, point: CGPoint(x: indicatorPt.x, y: indicatorPt.y - CGFloat(valOffset) - valueFont.lineHeight), align: .Center, attributes: [NSFontAttributeName: valueFont, NSForegroundColorAttributeName: valueTextColor])
+        }
+        
+        CGContextRestoreGState(context)
     }
     
     private func drawCircles(context context: CGContext)

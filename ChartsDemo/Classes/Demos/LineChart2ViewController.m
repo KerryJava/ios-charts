@@ -183,6 +183,9 @@
         for (LineChartDataSet *set in _chartView.data.dataSets)
         {
             set.drawCirclesEnabled = !set.isDrawCirclesEnabled;
+            set.indicatorIndex = 10;
+            set.indicatorStartInterval = 10;
+            set.indicatorEndInterval = 20;
         }
         
         [_chartView setNeedsDisplay];
