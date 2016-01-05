@@ -511,14 +511,9 @@ public class LineChartRenderer: LineScatterCandleRadarChartRenderer
                 pt.x = CGFloat(e.xIndex)
                 pt.y = CGFloat(e.value) * phaseY
                 pt = CGPointApplyAffineTransform(pt, valueToPixelMatrix)
-           
-                NSLog("the count is %zd", count)
                 
                 if ((j > indexOfCircle - startInterval) && (j <= indexOfCircle + endInterval)){
                     
-                    NSLog("index  %zd  %zd  %zd  max  %fd min  %f y %f index  %f ",j, indexOfCircle, startInterval, maxHeight, minHeight, pt.y, e.xIndex)
-                    
-                    NSLog("x %f y %f", indicatorPt.x, indicatorPt.y)
                     if (pt.y > maxHeight) {
                         maxHeight = pt.y
                     }
@@ -533,14 +528,12 @@ public class LineChartRenderer: LineScatterCandleRadarChartRenderer
                     startx = pt.x
                     maxHeight = pt.y
                     minHeight = pt.y
-                    NSLog("1max Height is %f min height is %f", maxHeight, minHeight)
                     break
                 case indexOfCircle + endInterval:
-                    NSLog("2max Height is %f min height is %f", maxHeight, minHeight)
 
                     endx = pt.x
                     width = endx - startx
-                    height = (max(fabs(indicatorPt.y - minHeight),fabs(maxHeight-indicatorPt.y)))
+                    height = (max(fabs(indicatorPt.y - minHeight),fabs(maxHeight-indicatorPt.y)))*2
                     break
                 case indexOfCircle:
                     indicatorPt = CGPoint(x: pt.x, y: pt.y)
@@ -565,7 +558,6 @@ public class LineChartRenderer: LineScatterCandleRadarChartRenderer
                 }
             }
            
-            NSLog("width %f height  %f minHeight  %f maxHeight  %f", width, height,minHeight, maxHeight)
             let originRect = CGRectMake(indicatorPt.x - width/2 , indicatorPt.y-height/2 , width, height)
             
             let arc :UIBezierPath = UIBezierPath(ovalInRect:originRect)
