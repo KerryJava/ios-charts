@@ -146,6 +146,7 @@
     set1.indicatorIndex = 15;
     set1.indicatorStartInterval = 6;
     set1.indicatorEndInterval = 6;
+    set1.indicatorText = @"hello world";
     
     NSMutableArray *dataSets = [[NSMutableArray alloc] init];
     [dataSets addObject:set1];

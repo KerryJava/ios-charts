@@ -25,6 +25,14 @@ public class LineChartDataSet: LineRadarChartDataSet
     public var indicatorEndInterval = Int(0)
     public var indicatorIndex = Int(0)
     
+    /// the color used for the value-text
+    public var indicatorTextColor: UIColor = UIColor.blackColor()
+    
+    /// the font for the value-text labels
+    public var indicatorValueFont: UIFont = UIFont.systemFontOfSize(7.0)
+   
+    public var indicatorText: NSString = ""
+    
     private var _cubicIntensity = CGFloat(0.2)
     
     public var lineDashPhase = CGFloat(0.0)

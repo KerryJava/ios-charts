@@ -499,11 +499,14 @@ public class LineChartRenderer: LineScatterCandleRadarChartRenderer
             
             var width:CGFloat = 0
             var height:CGFloat = 0
-           
+ 
             let startInterval = dataSet.indicatorStartInterval
             let endInterval = dataSet.indicatorEndInterval
             let indexOfCircle = dataSet.indicatorIndex
+            
             var indicatorPt = CGPoint()
+            let startIdx = indexOfCircle - startInterval
+            let endIdx = indexOfCircle + endInterval
  
             for (var j = minx, count = Int(ceil(CGFloat(maxx - minx) * phaseX + CGFloat(minx))); j < count; j++)
             {
@@ -511,8 +514,8 @@ public class LineChartRenderer: LineScatterCandleRadarChartRenderer
                 pt.x = CGFloat(e.xIndex)
                 pt.y = CGFloat(e.value) * phaseY
                 pt = CGPointApplyAffineTransform(pt, valueToPixelMatrix)
-                
-                if ((j > indexOfCircle - startInterval) && (j <= indexOfCircle + endInterval)){
+               
+                if ((j > startIdx) && (j <= endIdx)){
                     
                     if (pt.y > maxHeight) {
                         maxHeight = pt.y
@@ -524,13 +527,12 @@ public class LineChartRenderer: LineScatterCandleRadarChartRenderer
                 }
                 
                 switch j {
-                case indexOfCircle - startInterval:
+                case startIdx:
                     startx = pt.x
                     maxHeight = pt.y
                     minHeight = pt.y
                     break
-                case indexOfCircle + endInterval:
-
+                case endIdx:
                     endx = pt.x
                     width = endx - startx
                     height = (max(fabs(indicatorPt.y - minHeight),fabs(maxHeight-indicatorPt.y)))*2
@@ -542,7 +544,7 @@ public class LineChartRenderer: LineScatterCandleRadarChartRenderer
                     break
                 }
                
-                if (indexOfCircle + endInterval < j) {
+                if (endIdx < j) {
                     break
                 }
                 
@@ -569,12 +571,12 @@ public class LineChartRenderer: LineScatterCandleRadarChartRenderer
             
             arc.stroke()
             
-            let displayLabel = "hello world"
-            let valueFont = dataSet.valueFont
-            let valueTextColor = dataSet.valueTextColor
+            let displayLabel = dataSet.indicatorText
+            let valueFont = dataSet.indicatorValueFont
+            let valueTextColor = dataSet.indicatorTextColor
             
             let valOffset = Int(dataSet.circleRadius * 1.75 + height/2)
-            ChartUtils.drawText(context: context, text:displayLabel, point: CGPoint(x: indicatorPt.x, y: indicatorPt.y - CGFloat(valOffset) - valueFont.lineHeight), align: .Center, attributes: [NSFontAttributeName: valueFont, NSForegroundColorAttributeName: valueTextColor])
+            ChartUtils.drawText(context: context, text:displayLabel as String, point: CGPoint(x: indicatorPt.x, y: indicatorPt.y - CGFloat(valOffset) - valueFont.lineHeight), align: .Center, attributes: [NSFontAttributeName: valueFont, NSForegroundColorAttributeName: valueTextColor])
         }
         
         CGContextRestoreGState(context)
