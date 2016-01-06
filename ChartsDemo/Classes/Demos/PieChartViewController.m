@@ -73,6 +73,7 @@
                                 NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-LightItalic" size:10.f],
                                 NSForegroundColorAttributeName: [UIColor colorWithRed:51/255.f green:181/255.f blue:229/255.f alpha:1.f]
                                 } range:NSMakeRange(centerText.length - 19, 19)];
+    
     _chartView.centerAttributedText = centerText;
     
     _chartView.drawHoleEnabled = YES;

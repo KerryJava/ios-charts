@@ -503,6 +503,9 @@ public class LineChartRenderer: LineScatterCandleRadarChartRenderer
             let startInterval = dataSet.indicatorStartInterval
             let endInterval = dataSet.indicatorEndInterval
             let indexOfCircle = dataSet.indicatorIndex
+            let isYAlignCenter = dataSet.isYAlignCenter
+            var posX:CGFloat = 0
+            var posY:CGFloat = 0
             
             var indicatorPt = CGPoint()
             let startIdx = indexOfCircle - startInterval
@@ -535,8 +538,20 @@ public class LineChartRenderer: LineScatterCandleRadarChartRenderer
                 case endIdx:
                     endx = pt.x
                     width = endx - startx
-                    height = (max(fabs(indicatorPt.y - minHeight),fabs(maxHeight-indicatorPt.y)))*2
-                    break
+                    
+                    if (isYAlignCenter)
+                    {
+                        height = fabs(maxHeight - minHeight);
+                        posY = minHeight
+                    }
+                    else {
+                        
+                        height = (max(fabs(indicatorPt.y - minHeight),fabs(maxHeight-indicatorPt.y)))*2
+                        posY = indicatorPt.y - height/2
+                    }
+                    
+                    posX = indicatorPt.x - width/2
+                    
                 case indexOfCircle:
                     indicatorPt = CGPoint(x: pt.x, y: pt.y)
                     break
@@ -560,7 +575,7 @@ public class LineChartRenderer: LineScatterCandleRadarChartRenderer
                 }
             }
            
-            let originRect = CGRectMake(indicatorPt.x - width/2 , indicatorPt.y-height/2 , width, height)
+            let originRect = CGRectMake(posX , posY , width, height)
             
             let arc :UIBezierPath = UIBezierPath(ovalInRect:originRect)
             
@@ -575,8 +590,8 @@ public class LineChartRenderer: LineScatterCandleRadarChartRenderer
             let valueFont = dataSet.indicatorValueFont
             let valueTextColor = dataSet.indicatorTextColor
             
-            let valOffset = Int(dataSet.circleRadius * 1.75 + height/2)
-            ChartUtils.drawText(context: context, text:displayLabel as String, point: CGPoint(x: indicatorPt.x, y: indicatorPt.y - CGFloat(valOffset) - valueFont.lineHeight), align: .Center, attributes: [NSFontAttributeName: valueFont, NSForegroundColorAttributeName: valueTextColor])
+            let valOffset = Int(dataSet.circleRadius * 2)
+            ChartUtils.drawText(context: context, text:displayLabel as String, point: CGPoint(x: indicatorPt.x, y: posY - CGFloat(valOffset) - valueFont.lineHeight), align: .Center, attributes: [NSFontAttributeName: valueFont, NSForegroundColorAttributeName: valueTextColor])
         }
         
         CGContextRestoreGState(context)
