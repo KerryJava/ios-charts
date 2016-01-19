@@ -29,6 +29,9 @@ public class LineChartDataSet: LineRadarChartDataSet
     /// the color used for the value-text
     public var indicatorTextColor: UIColor = UIColor.blackColor()
     
+    /// the color used for the indicator 
+    public var indicatorColor: UIColor = UIColor.blueColor()
+
     /// the font for the value-text labels
     public var indicatorValueFont: UIFont = UIFont.systemFontOfSize(7.0)
    

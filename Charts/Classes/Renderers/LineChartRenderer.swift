@@ -582,7 +582,7 @@ public class LineChartRenderer: LineScatterCandleRadarChartRenderer
             let dashes: [CGFloat] = [2, 2]
             arc.setLineDash(dashes, count: 2, phase: 0)
             
-            UIColor.redColor().setStroke()
+            dataSet.indicatorColor.setStroke()
             
             arc.stroke()
             
