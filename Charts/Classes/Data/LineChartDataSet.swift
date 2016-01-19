@@ -45,6 +45,9 @@ public class LineChartDataSet: LineRadarChartDataSet
     /// if true, drawing circles is enabled
     public var drawCirclesEnabled = true
     
+    /// if true, drawing oval is enabled
+    public var drawOvalEnabled = true
+    
     /// if true, cubic lines are drawn instead of linear
     public var drawCubicEnabled = false
     
@@ -113,6 +116,7 @@ public class LineChartDataSet: LineRadarChartDataSet
     }
     
     public var isDrawCirclesEnabled: Bool { return drawCirclesEnabled; }
+    public var isDrawOvalEnabled: Bool { return drawOvalEnabled; }
     
     public var isDrawCubicEnabled: Bool { return drawCubicEnabled; }
     
