@@ -155,8 +155,22 @@ public class ChartXAxisRenderer: ChartAxisRendererBase
             labelMaxSize.width = _xAxis.wordWrapWidthPercent * valueToPixelMatrix.a
         }
         
-        for (var i = _minX, maxX = min(_maxX + 1, _xAxis.values.count); i < maxX; i += _xAxis.axisLabelModulus)
+        var midIdx = NSIntegerMax;
+        if (_xAxis.wordDrawInMiddle && _xAxis.values.count > 5)
         {
+            midIdx = _xAxis.values.count/2;
+        }
+        
+        for (var i = _minX, j = _minX, maxX = min(_maxX + 1, _xAxis.values.count); (i < maxX); i++)
+        {
+            if (i == j)
+            {
+                j += _xAxis.axisLabelModulus
+            }
+            else if (i != midIdx || !_xAxis.wordDrawInMiddle) {
+                continue;
+            }
+            
             let label = _xAxis.values[i]
             if (label == nil)
             {

@@ -100,6 +100,9 @@ public class ChartXAxis: ChartAxisBase
     /// **default**: 1.0
     public var wordWrapWidthPercent: CGFloat = 1.0
     
+    /// *Note: only applied when use skip label function*
+    public var wordDrawInMiddle = false
+    
     public override init()
     {
         super.init()
