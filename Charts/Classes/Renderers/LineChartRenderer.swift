@@ -504,6 +504,15 @@ public class LineChartRenderer: LineScatterCandleRadarChartRenderer
             let endInterval = dataSet.indicatorEndInterval
             let indexOfCircle = dataSet.indicatorIndex
             let isYAlignCenter = dataSet.isYAlignCenter
+            let indicatorInBounds = dataSet.indicatorInBounds;
+            
+            let displayLabel = dataSet.indicatorText
+            let valueFont = dataSet.indicatorValueFont
+            let valueTextColor = dataSet.indicatorTextColor
+            
+            let valOffset = 8 //Int(dataSet.circleRadius * 2)
+            let indicatorLabelOffset = CGFloat(valOffset) + valueFont.lineHeight
+
             var posX:CGFloat = 0
             var posY:CGFloat = 0
             
@@ -548,6 +557,39 @@ public class LineChartRenderer: LineScatterCandleRadarChartRenderer
                         
                         height = (max(fabs(indicatorPt.y - minHeight),fabs(maxHeight-indicatorPt.y)))*2
                         posY = indicatorPt.y - height/2
+                        
+                        NSLog(" posx y %f %f",posY, height)
+                       
+                        
+                        if(indicatorInBounds){
+                            
+                            let contRect = viewPortHandler.contentRect
+                            var offsetBottom:CGFloat = 0
+                            var offsetTop:CGFloat = 0
+                            var offset:CGFloat = 0
+                            let ovalBottom:CGFloat = posY + height
+                            let ovalTop:CGFloat = posY - indicatorLabelOffset
+                            
+                            NSLog("xxxxx posx y %f %f ",viewPortHandler.offsetBottom, viewPortHandler.offsetTop)
+                            
+                            NSLog("xxxxx posx y %f %f ",contRect.origin.y, contRect.size.height)
+                            
+                            NSLog("contRect %@", NSStringFromCGRect(contRect))
+                            
+                            if (!viewPortHandler.isInBoundsBottom(ovalBottom)) {
+                                offsetBottom = fabs(ovalBottom - (viewPortHandler.contentBottom))
+                            }
+                            
+                            if (!viewPortHandler.isInBoundsTop(ovalTop)) {
+                                offsetTop = fabs(ovalTop - viewPortHandler.contentTop)
+                            }
+                            
+                            offset = max(offsetBottom, offsetTop)
+                            
+                            height -= offset*2
+                            
+                            posY = indicatorPt.y - height/2
+                        }
                     }
                     
                     posX = indicatorPt.x - width/2
@@ -585,13 +627,8 @@ public class LineChartRenderer: LineScatterCandleRadarChartRenderer
             dataSet.indicatorColor.setStroke()
             
             arc.stroke()
-            
-            let displayLabel = dataSet.indicatorText
-            let valueFont = dataSet.indicatorValueFont
-            let valueTextColor = dataSet.indicatorTextColor
-            
-            let valOffset = Int(dataSet.circleRadius * 2)
-            ChartUtils.drawText(context: context, text:displayLabel as String, point: CGPoint(x: indicatorPt.x, y: posY - CGFloat(valOffset) - valueFont.lineHeight), align: .Center, attributes: [NSFontAttributeName: valueFont, NSForegroundColorAttributeName: valueTextColor])
+ 
+            ChartUtils.drawText(context: context, text:displayLabel as String, point: CGPoint(x: indicatorPt.x, y: posY - indicatorLabelOffset), align: .Center, attributes: [NSFontAttributeName: valueFont, NSForegroundColorAttributeName: valueTextColor])
         }
         
         CGContextRestoreGState(context)

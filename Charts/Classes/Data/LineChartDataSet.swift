@@ -25,6 +25,7 @@ public class LineChartDataSet: LineRadarChartDataSet
     public var indicatorEndInterval = Int(0)
     public var indicatorIndex = Int(0)
     public var isYAlignCenter = false
+    public var indicatorInBounds = true
     
     /// the color used for the value-text
     public var indicatorTextColor: UIColor = UIColor.blackColor()
