@@ -332,8 +332,9 @@ public class PieChartRenderer: ChartDataRendererBase
                 
                 var drawReverseDirection:Bool = Bool(false);
                 var plotOffset:CGFloat = 40.0
-                let lineWith:CGFloat = 2.0
-                let lineColor = dataSet.colorAt(j)
+                let lineWith:CGFloat = dataSet.lineWidth
+                
+                let lineColor = (dataSet.needLineColorSame) ? dataSet.lineColor:dataSet.colorAt(j)
 
                 if (dataSet.needLineForLabel)
                 {

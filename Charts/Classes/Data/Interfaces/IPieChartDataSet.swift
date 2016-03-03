@@ -41,4 +41,10 @@ public protocol IPieChartDataSet: IChartDataSet
     var needLineForLabel: Bool { get set }
     
     var needLabelColorSameAsSlice: Bool {get set}
+    
+    var needLineColorSame: Bool {get set}
+    
+    var lineColor : UIColor {get set}
+    
+    var lineWidth : CGFloat {get set}
 }

@@ -240,5 +240,49 @@ public class PieChartDataSet: ChartDataSet, IPieChartDataSet
             _needLabelColorSameAsSlice = newValue
         }
     }
+   
+    private var _lineColor = UIColor.grayColor()
+
+    /// the  draw the value the same color as slice
+    public var lineColor: UIColor
+        {
+        get
+        {
+            return _lineColor
+        }
+        set
+        {
+            _lineColor = newValue
+        }
+    }
+   
+    private var _lineWidth = CGFloat(1.0)
+
+    public var lineWidth: CGFloat
+        {
+        get
+        {
+            return _lineWidth
+        }
+        set
+        {
+            _lineWidth = newValue
+        }
+    }
+    
+    private var _needLineColorSame = Bool(true)
+    
+    /// the  draw the value the same color as slice
+    public var needLineColorSame: Bool
+        {
+        get
+        {
+            return _needLineColorSame
+        }
+        set
+        {
+            _needLineColorSame = newValue
+        }
+    }
     
 }
